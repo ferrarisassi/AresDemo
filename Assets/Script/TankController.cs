@@ -57,7 +57,6 @@ public class TankController : MonoBehaviour
     // Input values
     private float forwardInput = 0.0f;
     private float turnInput = 0.0f;
-    private float brakeInput = 0.0f;
     
     private void Awake()
     {
@@ -100,7 +99,6 @@ public class TankController : MonoBehaviour
         // Basic input using Unity's input system
         forwardInput = Input.GetAxis("Vertical");
         turnInput = Input.GetAxis("Horizontal");
-        brakeInput = Input.GetKey(KeyCode.Space) ? 1.0f : 0.0f;
     }
     
     private void ApplyTreadForces()
@@ -110,17 +108,6 @@ public class TankController : MonoBehaviour
         
         // Apply forces from each tread
         ApplyTreadForce(leftTreadSpeed, rightTreadSpeed);
-        
-        // Apply braking if needed
-        if (brakeInput > 0)
-        {
-            // Apply braking force opposite to the direction of movement
-            float brakingForce = brakeForce * brakeInput;
-            if (Mathf.Abs(currentSpeed) > 0.1f)
-            {
-                tankRigidbody.AddForce(-tankRigidbody.linearVelocity.normalized * brakingForce, ForceMode.Acceleration);
-            }
-        }
     }
     
     private void CalculateTreadSpeeds()
@@ -136,11 +123,11 @@ public class TankController : MonoBehaviour
             // For right turns (positive input), slow down right tread
             if (turnInput < 0)
             {
-                targetLeftTread += turnInput * maxTreadSpeed; // This will be negative for left turns
+                targetLeftTread -= turnInput * maxTreadSpeed; // This will be negative for left turns
             }
             else
             {
-                targetRightTread -= turnInput * maxTreadSpeed; // Reduce right tread for right turns
+                targetRightTread += turnInput * maxTreadSpeed; // Reduce right tread for right turns
             }
             
             // Allow counter-rotation of treads when stationary for pivot turning
@@ -149,13 +136,6 @@ public class TankController : MonoBehaviour
                 targetLeftTread = -turnInput * maxTreadSpeed * 0.5f;
                 targetRightTread = turnInput * maxTreadSpeed * 0.5f;
             }
-        }
-        
-        // Apply braking effect to tread speeds
-        if (brakeInput > 0)
-        {
-            targetLeftTread *= (1 - brakeInput * 0.8f);
-            targetRightTread *= (1 - brakeInput * 0.8f);
         }
         
         // Smoothly interpolate current tread speeds towards target speeds
@@ -176,7 +156,7 @@ public class TankController : MonoBehaviour
         tankRigidbody.AddTorque(transform.up * torque, ForceMode.Force);
         
         // Natural deceleration when no input
-        if (Mathf.Abs(forwardInput) < 0.1f && Mathf.Abs(turnInput) < 0.1f && brakeInput <= 0)
+        if (Mathf.Abs(forwardInput) < 0.1f && Mathf.Abs(turnInput) < 0.1f)
         {
             tankRigidbody.linearDamping = decelerationForce;
         }
@@ -283,7 +263,7 @@ public class TankController : MonoBehaviour
         }
     }
     
-    // Public methods for external control
+    // Public methods for external control with AresGameInput – C++
     
     /// <summary>
     /// Sets the forward/backward input value between -1 and 1
@@ -299,14 +279,6 @@ public class TankController : MonoBehaviour
     public void SetTurnInput(float input)
     {
         turnInput = Mathf.Clamp(input, -1f, 1f);
-    }
-    
-    /// <summary>
-    /// Sets the brake input value between 0 and 1
-    /// </summary>
-    public void SetBrakeInput(float input)
-    {
-        brakeInput = Mathf.Clamp01(input);
     }
     
     /// <summary>
