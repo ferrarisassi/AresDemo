@@ -8,29 +8,30 @@ public class TankController : MonoBehaviour
 {
     [Header("Tank Specifications")]
     [Tooltip("Maximum speed of the tank in units per second")]
-    public float maxSpeed = 10.0f;
+    [SerializeField] private float maxSpeed = 10.0f;
     
     [Tooltip("How quickly the tank accelerates")]
-    public float accelerationForce = 3.0f;
+    [SerializeField] private float accelerationForce = 3.0f;
     
     [Tooltip("How quickly the tank decelerates when not accelerating")]
-    public float decelerationForce = 2.0f;
+    [SerializeField] private float decelerationForce = 2.0f;
     
     [Tooltip("Maximum rotation speed in degrees per second")]
-    public float maxRotationSpeed = 60.0f;
+    [SerializeField] private float maxRotationSpeed = 60.0f;
     
     [Header("Tread Controls")]
     [Tooltip("Tread movement power multiplier")]
-    public float treadPower = 15.0f;
+    [SerializeField] private float treadPower = 15.0f;
     
     [Tooltip("Maximum tread speed")]
-    public float maxTreadSpeed = 5.0f;
+    [SerializeField] private float maxTreadSpeed = 5.0f;
     
-    // Private variables
+    // Variables not in inspector
     private Rigidbody tankRigidbody;
     private float currentSpeed = 0.0f;
     private float leftTreadSpeed = 0.0f;
     private float rightTreadSpeed = 0.0f;
+
     // Input values
     private float forwardInput = 0.0f;
     private float turnInput = 0.0f;

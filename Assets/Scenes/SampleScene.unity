@@ -281,7 +281,7 @@ Transform:
   m_GameObject: {fileID: 330585543}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0.384, y: 1.913, z: 0}
+  m_LocalPosition: {x: 0.384, y: 2.02, z: 0.42}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -543,7 +543,7 @@ GameObject:
   - component: {fileID: 617451050}
   - component: {fileID: 617451049}
   m_Layer: 5
-  m_Name: HorizontalAngleText
+  m_Name: VerticalAngleText
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -667,6 +667,11 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 617451047}
   m_CullTransparentMesh: 1
+--- !u!1 &667573562 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 1903408125111765183, guid: 4d0da098974ab8f489b052a456ccae32, type: 3}
+  m_PrefabInstance: {fileID: 2034542189}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &832575517
 GameObject:
   m_ObjectHideFlags: 0
@@ -935,20 +940,9 @@ MonoBehaviour:
   maxSpeed: 5
   accelerationForce: 3
   decelerationForce: 2
-  brakeForce: 8
   maxRotationSpeed: 60
-  rotationAcceleration: 10
   treadPower: 15
   maxTreadSpeed: 5
-  leftTreadTransform: {fileID: 0}
-  rightTreadTransform: {fileID: 0}
-  treadRotationSpeed: 200
-  engineSound: {fileID: 0}
-  treadsSound: {fileID: 0}
-  minEnginePitch: 0.5
-  maxEnginePitch: 1.5
-  minTreadVolume: 0
-  maxTreadVolume: 1
 --- !u!4 &977327661
 Transform:
   m_ObjectHideFlags: 0
@@ -978,7 +972,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9bf874a166008fe45a8b404544d39e99, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  mainCamera: {fileID: 0}
+  mainCamera: {fileID: 330585543}
+  minVerticalAngle: -60
+  maxVerticalAngle: 10
+  horizontalVelocity: 1
+  verticalVelocity: 1
+  horizontalUI: {fileID: 1697238070}
+  verticalUI: {fileID: 1135440029}
+  horizontalObject: {fileID: 667573562}
+  verticalObject: {fileID: 0}
 --- !u!1 &1041517703
 GameObject:
   m_ObjectHideFlags: 0
@@ -1084,7 +1086,7 @@ GameObject:
   - component: {fileID: 1135440030}
   - component: {fileID: 1135440029}
   m_Layer: 5
-  m_Name: HorizontalAngleDegrees
+  m_Name: VerticalAngleDegrees
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1887,7 +1889,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 919132149155446097, guid: 4d0da098974ab8f489b052a456ccae32, type: 3}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 1630794972795428178, guid: 4d0da098974ab8f489b052a456ccae32, type: 3}
       propertyPath: 'm_Materials.Array.data[0]'
@@ -1919,7 +1921,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 9177395775259655793, guid: 4d0da098974ab8f489b052a456ccae32, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 0
+      value: 0.0037
+      objectReference: {fileID: 0}
+    - target: {fileID: 9177395775259655793, guid: 4d0da098974ab8f489b052a456ccae32, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: -0
       objectReference: {fileID: 0}
     - target: {fileID: 9177395775259655793, guid: 4d0da098974ab8f489b052a456ccae32, type: 3}
       propertyPath: m_LocalRotation.w
