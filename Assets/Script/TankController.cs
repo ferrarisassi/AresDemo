@@ -16,14 +16,8 @@ public class TankController : MonoBehaviour
     [Tooltip("How quickly the tank decelerates when not accelerating")]
     public float decelerationForce = 2.0f;
     
-    [Tooltip("How quickly the tank slows when braking")]
-    public float brakeForce = 8.0f;
-    
     [Tooltip("Maximum rotation speed in degrees per second")]
     public float maxRotationSpeed = 60.0f;
-    
-    [Tooltip("How quickly the tank rotation accelerates")]
-    public float rotationAcceleration = 10.0f;
     
     [Header("Tread Controls")]
     [Tooltip("Tread movement power multiplier")]
@@ -32,28 +26,11 @@ public class TankController : MonoBehaviour
     [Tooltip("Maximum tread speed")]
     public float maxTreadSpeed = 5.0f;
     
-    [Header("Tread Visuals")]
-    public Transform leftTreadTransform;
-    public Transform rightTreadTransform;
-    public float treadRotationSpeed = 200.0f;
-    
-    [Header("Sound Effects")]
-    public AudioSource engineSound;
-    public AudioSource treadsSound;
-    public float minEnginePitch = 0.5f;
-    public float maxEnginePitch = 1.5f;
-    public float minTreadVolume = 0.0f;
-    public float maxTreadVolume = 1.0f;
-    
     // Private variables
     private Rigidbody tankRigidbody;
     private float currentSpeed = 0.0f;
-    private float currentRotationSpeed = 0.0f;
     private float leftTreadSpeed = 0.0f;
     private float rightTreadSpeed = 0.0f;
-    private float leftTreadRotation = 0.0f;
-    private float rightTreadRotation = 0.0f;
-    
     // Input values
     private float forwardInput = 0.0f;
     private float turnInput = 0.0f;
@@ -72,26 +49,8 @@ public class TankController : MonoBehaviour
     
     private void Update()
     {
-        // Get input (can be replaced with your own input system)
+        // Get input (will be replaced with AresGameInput – C++)
         HandleInput();
-        
-        // Update tread visuals
-        UpdateTreadVisuals();
-        
-        // Update audio
-        UpdateAudio();
-    }
-    
-    private void FixedUpdate()
-    {
-        // Calculate the current speed
-        currentSpeed = Vector3.Dot(tankRigidbody.linearVelocity, transform.forward);
-        
-        // Apply tread forces
-        ApplyTreadForces();
-        
-        // Limit speed
-        LimitSpeed();
     }
     
     private void HandleInput()
@@ -99,6 +58,18 @@ public class TankController : MonoBehaviour
         // Basic input using Unity's input system
         forwardInput = Input.GetAxis("Vertical");
         turnInput = Input.GetAxis("Horizontal");
+    }
+    
+    private void FixedUpdate()
+    {
+        // Calculate the current speed
+        currentSpeed = Vector3.Dot(tankRigidbody.linearVelocity, transform.forward);
+
+        // Apply tread forces
+        ApplyTreadForces();
+
+        // Limit speed
+        LimitSpeed();
     }
     
     private void ApplyTreadForces()
@@ -163,69 +134,6 @@ public class TankController : MonoBehaviour
         else
         {
             tankRigidbody.linearDamping = 0.1f; // Lower drag when player is controlling
-        }
-    }
-    
-    private void UpdateTreadVisuals()
-    {
-        // Skip if tread transforms aren't assigned
-        if (leftTreadTransform == null || rightTreadTransform == null)
-        {
-            return;
-        }
-        
-        // Update rotation of treads based on their speeds
-        leftTreadRotation += leftTreadSpeed * treadRotationSpeed * Time.deltaTime;
-        rightTreadRotation += rightTreadSpeed * treadRotationSpeed * Time.deltaTime;
-        
-        // Apply rotation to tread meshes
-        // The actual visual implementation depends on your specific model setup
-        // For a basic setup, we'll just rotate the entire tread transform around its local X axis
-        leftTreadTransform.localRotation = Quaternion.Euler(leftTreadRotation, 0, 0);
-        rightTreadTransform.localRotation = Quaternion.Euler(rightTreadRotation, 0, 0);
-    }
-    
-    private void UpdateAudio()
-    {
-        // Calculate activity level based on tread speeds
-        float activityLevel = (Mathf.Abs(leftTreadSpeed) + Mathf.Abs(rightTreadSpeed)) / (2 * maxTreadSpeed);
-        
-        // Update engine sound
-        if (engineSound != null)
-        {
-            // Adjust engine pitch based on activity
-            engineSound.pitch = Mathf.Lerp(minEnginePitch, maxEnginePitch, activityLevel);
-            
-            // Make sure engine sound is playing
-            if (!engineSound.isPlaying)
-            {
-                engineSound.Play();
-            }
-        }
-        
-        // Update treads sound
-        if (treadsSound != null)
-        {
-            // Adjust treads volume based on activity
-            treadsSound.volume = Mathf.Lerp(minTreadVolume, maxTreadVolume, activityLevel);
-            
-            // Play or stop treads sound based on movement
-            if (activityLevel > 0.05f)
-            {
-                if (!treadsSound.isPlaying)
-                {
-                    treadsSound.Play();
-                }
-            }
-            else if (treadsSound.isPlaying)
-            {
-                // Fade out instead of immediate stop for more natural sound
-                treadsSound.volume = Mathf.Lerp(treadsSound.volume, 0, Time.deltaTime * 2);
-                if (treadsSound.volume < 0.05f)
-                {
-                    treadsSound.Stop();
-                }
-            }
         }
     }
     
