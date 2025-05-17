@@ -32,6 +32,9 @@ public class AimController : MonoBehaviour
     [Tooltip("Object that follows the vertical rotation")]
     [SerializeField] private GameObject verticalObject;
 
+    [Tooltip("Offset of the rotation of the Object that follows the vertical rotation")]
+    [SerializeField] private Vector3 verticalRotationOffset;
+
     // Variables not in inspector
     private float currentHorizontalAngle = 0f;  
     private float currentVerticalAngle = 0f; 
@@ -94,16 +97,14 @@ public class AimController : MonoBehaviour
 
         //Rotate Objects
         if (horizontalObject != null) {
-            Quaternion ObjRotation = horizontalObject.transform.rotation;
-            horizontalObject.transform.rotation = Quaternion.Euler(ObjRotation.eulerAngles.x, currentHorizontalAngle, ObjRotation.eulerAngles.z);
+            horizontalObject.transform.rotation = horizontalObject.transform.parent.rotation * Quaternion.Euler(0, currentHorizontalAngle, 0);
         }
         if (verticalObject != null) {
-            Quaternion ObjRotation = verticalObject.transform.rotation;
-            verticalObject.transform.rotation = Quaternion.Euler(currentVerticalAngle, ObjRotation.eulerAngles.y, ObjRotation.eulerAngles.z);
+            verticalObject.transform.rotation = verticalObject.transform.parent.rotation * Quaternion.Euler(new Vector3(currentVerticalAngle, 0, 0) + verticalRotationOffset);
         }
 
         // Create local rotation based on our input values
-        Quaternion localRotation = Quaternion.Euler(currentVerticalAngle, currentHorizontalAngle, 0);
+        Quaternion localRotation = Quaternion.Euler(currentVerticalAngle, 0, 0);
             
         // Apply the rotation to the camera (using parent's world rotation as reference)
         mainCamera.transform.rotation = mainCamera.transform.parent.rotation * localRotation;

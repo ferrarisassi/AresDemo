@@ -25,6 +25,10 @@ public class TankController : MonoBehaviour
     
     [Tooltip("Maximum tread speed")]
     [SerializeField] private float maxTreadSpeed = 5.0f;
+
+    [Header("Shooting Settings")]
+    [SerializeField] private GameObject bulletPrefab;
+    [SerializeField] private Transform bulletSpawn;
     
     // Variables not in inspector
     private Rigidbody tankRigidbody;
@@ -35,30 +39,36 @@ public class TankController : MonoBehaviour
     // Input values
     private float forwardInput = 0.0f;
     private float turnInput = 0.0f;
+    private bool shootInput = false;
     
     private void Awake()
     {
         // Get the rigidbody component
         tankRigidbody = GetComponent<Rigidbody>();
-        
+
         // Set the center of mass lower to prevent rollovers
         if (tankRigidbody != null)
         {
             tankRigidbody.centerOfMass = new Vector3(0, -0.8f, 0);
         }
     }
-    
+
     private void Update()
     {
         // Get input (will be replaced with AresGameInput – C++)
         HandleInput();
+        if (shootInput)
+        {
+            Instantiate(bulletPrefab, bulletSpawn.position, bulletSpawn.rotation);
+        }
     }
-    
+
     private void HandleInput()
     {
         // Basic input using Unity's input system
         forwardInput = Input.GetAxis("Vertical");
         turnInput = Input.GetAxis("Horizontal");
+        shootInput = Input.GetKeyDown(KeyCode.Space);
     }
     
     private void FixedUpdate()
